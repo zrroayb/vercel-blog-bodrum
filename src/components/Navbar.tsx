@@ -6,11 +6,11 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav className="bg-gray-800 text-white">
+    <nav className="bg-blue-800 text-white">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="text-xl font-bold">
-            Şirketimiz
+            Bodrum
           </Link>
           
           <button
@@ -23,16 +23,16 @@ export default function Navbar() {
           </button>
 
           <div className={`md:flex ${isOpen ? 'block' : 'hidden'}`}>
-            <Link href="/" className="px-3 py-2 hover:text-gray-300">
+            <Link href="/" className="px-3 py-2 hover:text-blue-200">
               Ana Sayfa
             </Link>
-            <Link href="/hakkimizda" className="px-3 py-2 hover:text-gray-300">
+            <Link href="/nufus-ara" className="px-3 py-2 hover:text-blue-200">
+              Nüfus Ara
+            </Link>
+            <Link href="/hakkimizda" className="px-3 py-2 hover:text-blue-200">
               Hakkımızda
             </Link>
-            <Link href="/hizmetler" className="px-3 py-2 hover:text-gray-300">
-              Hizmetler
-            </Link>
-            <Link href="/iletisim" className="px-3 py-2 hover:text-gray-300">
+            <Link href="/iletisim" className="px-3 py-2 hover:text-blue-200">
               İletişim
             </Link>
           </div>
