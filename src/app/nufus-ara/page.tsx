@@ -1,6 +1,17 @@
 'use client'
 import { useState } from 'react'
 import Navbar from '@/components/Navbar'
+import { 
+  TextInput, 
+  Select, 
+  Table, 
+  Paper, 
+  Title, 
+  Container, 
+  Stack,
+  Text,
+  Group
+} from '@mantine/core'
 
 interface PersonData {
   id: number
@@ -13,8 +24,8 @@ interface PersonData {
 
 export default function NufusAra() {
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedIlce, setSelectedIlce] = useState('')
-  const [selectedMahalle, setSelectedMahalle] = useState('')
+  const [selectedIlce, setSelectedIlce] = useState<string | null>(null)
+  const [selectedMahalle, setSelectedMahalle] = useState<string | null>(null)
 
   // Örnek veri - Gerçek uygulamada API'den gelecek
   const sampleData: PersonData[] = [
@@ -24,16 +35,16 @@ export default function NufusAra() {
     // Daha fazla örnek veri eklenebilir
   ]
 
-  const ilceler = ['Tüm İlçeler', 'Bodrum', 'Gümbet', 'Turgutreis', 'Yalıkavak']
-  const mahalleler = ['Tüm Mahalleler', 'Kumbahçe', 'Türkkuyusu', 'Çarşı', 'Merkez']
+  const ilceler = ['Bodrum', 'Gümbet', 'Turgutreis', 'Yalıkavak']
+  const mahalleler = ['Kumbahçe', 'Türkkuyusu', 'Çarşı', 'Merkez']
 
   const filteredData = sampleData.filter(person => {
     const matchesSearch = 
       person.ad.toLowerCase().includes(searchTerm.toLowerCase()) ||
       person.soyad.toLowerCase().includes(searchTerm.toLowerCase())
     
-    const matchesIlce = !selectedIlce || selectedIlce === 'Tüm İlçeler' || person.ilce === selectedIlce
-    const matchesMahalle = !selectedMahalle || selectedMahalle === 'Tüm Mahalleler' || person.mahalle === selectedMahalle
+    const matchesIlce = !selectedIlce || person.ilce === selectedIlce
+    const matchesMahalle = !selectedMahalle || person.mahalle === selectedMahalle
 
     return matchesSearch && matchesIlce && matchesMahalle
   })
@@ -41,76 +52,65 @@ export default function NufusAra() {
   return (
     <main className="min-h-screen bg-blue-50">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <h1 className="text-3xl font-bold text-blue-800 mb-8">Nüfus Ara</h1>
+      <Container size="xl" py="xl">
+        <Paper shadow="sm" p="xl" radius="md">
+          <Title order={2} mb="lg" c="blue">Nüfus Ara</Title>
           
-          {/* Search and Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div>
-              <input
-                type="text"
+          <Stack gap="md" mb="xl">
+            <Group grow>
+              <TextInput
                 placeholder="İsim veya soyisim ara..."
-                className="w-full px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-            </div>
-            <select
-              className="w-full px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={selectedIlce}
-              onChange={(e) => setSelectedIlce(e.target.value)}
-            >
-              {ilceler.map(ilce => (
-                <option key={ilce} value={ilce}>{ilce}</option>
-              ))}
-            </select>
-            <select
-              className="w-full px-4 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={selectedMahalle}
-              onChange={(e) => setSelectedMahalle(e.target.value)}
-            >
-              {mahalleler.map(mahalle => (
-                <option key={mahalle} value={mahalle}>{mahalle}</option>
-              ))}
-            </select>
-          </div>
+              <Select
+                placeholder="İlçe seçin"
+                data={ilceler}
+                value={selectedIlce}
+                onChange={setSelectedIlce}
+                clearable
+              />
+              <Select
+                placeholder="Mahalle seçin"
+                data={mahalleler}
+                value={selectedMahalle}
+                onChange={setSelectedMahalle}
+                clearable
+              />
+            </Group>
+          </Stack>
 
-          {/* Results Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead className="bg-blue-100">
-                <tr>
-                  <th className="px-4 py-3 text-left text-blue-800">Ad</th>
-                  <th className="px-4 py-3 text-left text-blue-800">Soyad</th>
-                  <th className="px-4 py-3 text-left text-blue-800">Yaş</th>
-                  <th className="px-4 py-3 text-left text-blue-800">Mahalle</th>
-                  <th className="px-4 py-3 text-left text-blue-800">İlçe</th>
-                </tr>
-              </thead>
-              <tbody>
+          <Paper withBorder>
+            <Table striped highlightOnHover>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Ad</Table.Th>
+                  <Table.Th>Soyad</Table.Th>
+                  <Table.Th>Yaş</Table.Th>
+                  <Table.Th>Mahalle</Table.Th>
+                  <Table.Th>İlçe</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
                 {filteredData.map((person) => (
-                  <tr 
-                    key={person.id}
-                    className="border-b border-blue-100 hover:bg-blue-50"
-                  >
-                    <td className="px-4 py-3">{person.ad}</td>
-                    <td className="px-4 py-3">{person.soyad}</td>
-                    <td className="px-4 py-3">{person.yas}</td>
-                    <td className="px-4 py-3">{person.mahalle}</td>
-                    <td className="px-4 py-3">{person.ilce}</td>
-                  </tr>
+                  <Table.Tr key={person.id}>
+                    <Table.Td>{person.ad}</Table.Td>
+                    <Table.Td>{person.soyad}</Table.Td>
+                    <Table.Td>{person.yas}</Table.Td>
+                    <Table.Td>{person.mahalle}</Table.Td>
+                    <Table.Td>{person.ilce}</Table.Td>
+                  </Table.Tr>
                 ))}
-              </tbody>
-            </table>
+              </Table.Tbody>
+            </Table>
             {filteredData.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
+              <Text c="dimmed" ta="center" py="xl">
                 Sonuç bulunamadı
-              </div>
+              </Text>
             )}
-          </div>
-        </div>
-      </div>
+          </Paper>
+        </Paper>
+      </Container>
     </main>
   )
 } 
